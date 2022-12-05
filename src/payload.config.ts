@@ -6,6 +6,7 @@ import Companies from "./collections/Companies";
 import Media from "./collections/Media";
 import Sites from "./collections/Sites";
 import Mines from "./collections/Mines";
+import Procurements from "./collections/Procurements";
 
 export default buildConfig({
   serverURL: "http://localhost:3000",
@@ -18,6 +19,7 @@ export default buildConfig({
     Media,
     Sites,
     Mines,
+    Procurements,
     // Add Collections here
     // Examples,
   ],
