@@ -1,4 +1,6 @@
 import { CollectionConfig } from "payload/types";
+import { isAdmin } from "../access/isAdmin";
+import { isAdminOrSelf } from "../access/isAdminOrSelf";
 
 const Procurements: CollectionConfig = {
   slug: "procurements",
@@ -6,15 +8,40 @@ const Procurements: CollectionConfig = {
     useAsTitle: "name",
   },
   access: {
-    read: () => true,
+    update: ({ data }) => {
+      console.log(data);
+      return true;
+    },
+    read: ({ req: { user } }) => {
+      if (Boolean(user?.roles?.includes("admin"))) return true;
+      return {
+        _status: {
+          equals: "published",
+        },
+        applicant: {
+          in: user.id,
+        },
+      };
+    },
+  },
+  versions: {
+    drafts: true,
   },
   fields: [
+    {
+      name: "site",
+      type: "relationship",
+      relationTo: "sites",
+      required: true,
+      admin: {
+        position: "sidebar",
+      },
+    },
     {
       type: "tabs",
       tabs: [
         {
           label: "Requisition",
-          description: "All requisition details",
           fields: [
             {
               label: "Requisition",
@@ -28,6 +55,19 @@ const Procurements: CollectionConfig = {
                       label: "Applicant",
                       type: "relationship",
                       relationTo: "users",
+                      access: {
+                        update: ({ req: { user } }) => {
+                          return Boolean(user?.roles?.includes("admin"));
+                        },
+                        create: ({ req: { user } }) => {
+                          return Boolean(user?.roles?.includes("admin"));
+                        },
+                      },
+                      defaultValue: ({ user }) => {
+                        if (!user?.roles?.includes("admin")) {
+                          return user.id;
+                        }
+                      },
                       admin: {
                         isSortable: true,
                         width: "50%",
@@ -36,10 +76,8 @@ const Procurements: CollectionConfig = {
                     {
                       name: "administrator",
                       label: "Administrator",
-                      type: "relationship",
-                      relationTo: "users",
+                      type: "text",
                       admin: {
-                        isSortable: true,
                         width: "50%",
                       },
                     },
@@ -50,30 +88,10 @@ const Procurements: CollectionConfig = {
                   fields: [
                     {
                       name: "department",
-                      type: "select",
+                      type: "text",
                       admin: {
-                        isClearable: true,
-                        isSortable: true,
                         width: "50%",
                       },
-                      options: [
-                        {
-                          label: "Department Option One",
-                          value: "Department Option One",
-                        },
-                        {
-                          label: "Department Option Two",
-                          value: "Department Option Two",
-                        },
-                        {
-                          label: "Department Option Three",
-                          value: "Department Option Three",
-                        },
-                        {
-                          label: "Department Option Four",
-                          value: "Department Option Four",
-                        },
-                      ],
                     },
                     {
                       name: "project",
@@ -179,27 +197,41 @@ const Procurements: CollectionConfig = {
             },
           ],
         },
+        {
+          label: "Quotations",
+          fields: [
+            {
+              name: "quote",
+              label: "Quote",
+              type: "upload",
+              relationTo: "media",
+              unique: true,
+            },
+            {
+              name: "quoteComment",
+              label: "Comment",
+              type: "text",
+            },
+          ],
+        },
+        {
+          label: "Invoices",
+          fields: [
+            {
+              name: "invoice",
+              label: "Invoice",
+              type: "upload",
+              relationTo: "media",
+              unique: true,
+            },
+            {
+              name: "invoiceComment",
+              label: "Comment",
+              type: "text",
+            },
+          ],
+        },
       ],
-    },
-    {
-      name: "invoice",
-      label: "Invoice",
-      type: "upload",
-      relationTo: "media",
-      unique: true,
-      admin: {
-        position: "sidebar",
-      },
-    },
-    {
-      name: "quote",
-      label: "Quote",
-      type: "upload",
-      relationTo: "media",
-      unique: true,
-      admin: {
-        position: "sidebar",
-      },
     },
   ],
 };

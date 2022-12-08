@@ -1,4 +1,5 @@
 import { CollectionConfig } from "payload/types";
+import { hasCompanyAccess } from "../access/hasCompanyAccess";
 import slug from "../fields/slug";
 
 const Sites: CollectionConfig = {
@@ -7,13 +8,28 @@ const Sites: CollectionConfig = {
     useAsTitle: "name",
   },
   access: {
-    read: () => true,
+    read: hasCompanyAccess("mine"),
+    // read: ({ req: { user } }) => {
+    //   console.log(user);
+    //   return {
+    //     mine: {
+    //       in: user.companies.mines,
+    //     },
+    //   };
+    // },
   },
   fields: [
     {
       name: "name",
       label: "Site Name",
       type: "text",
+      required: true,
+    },
+    {
+      name: "mine",
+      label: "Mine",
+      type: "relationship",
+      relationTo: "mines",
       required: true,
     },
     {
@@ -25,11 +41,11 @@ const Sites: CollectionConfig = {
     {
       name: "featureImages",
       type: "array",
-      label: "Company Feature Images",
+      label: "Feature Images",
       fields: [
         {
-          name: "featureImage",
-          label: "Company Feature Image",
+          name: "image",
+          label: "Image",
           type: "upload",
           relationTo: "media",
         },

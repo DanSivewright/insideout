@@ -1,4 +1,6 @@
 import { CollectionConfig } from "payload/types";
+import { hasCompanyAccess } from "../access/hasCompanyAccess";
+import { isAdmin } from "../access/isAdmin";
 import slug from "../fields/slug";
 
 const Mines: CollectionConfig = {
@@ -7,7 +9,10 @@ const Mines: CollectionConfig = {
     useAsTitle: "name",
   },
   access: {
-    read: () => true,
+    read: hasCompanyAccess(),
+    update: hasCompanyAccess(),
+    delete: isAdmin,
+    create: hasCompanyAccess(),
   },
   fields: [
     {
@@ -25,24 +30,26 @@ const Mines: CollectionConfig = {
     {
       name: "featureImages",
       type: "array",
-      label: "Company Feature Images",
+      label: "Feature Images",
       fields: [
         {
-          name: "featureImage",
-          label: "Company Feature Image",
+          name: "image",
+          label: "Image",
           type: "upload",
           relationTo: "media",
         },
       ],
     },
     {
-      name: "sites",
-      label: "Sites",
+      name: "company",
+      label: "Company",
       type: "relationship",
-      relationTo: "sites",
-      hasMany: true,
-      admin: {
-        isSortable: true,
+      relationTo: "companies",
+      required: true,
+      defaultValue: ({ user }) => {
+        if (!user.roles.includes("admin") && user.company.id) {
+          return user.company.id;
+        }
       },
     },
     slug,

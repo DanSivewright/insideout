@@ -1,13 +1,22 @@
 import { CollectionConfig } from "payload/types";
+import { hasCompanyAccess } from "../access/hasCompanyAccess";
+import { isAdmin } from "../access/isAdmin";
 import slug from "../fields/slug";
 
 const Companies: CollectionConfig = {
   slug: "companies",
   admin: {
     useAsTitle: "name",
+    preview: () => null,
   },
   access: {
-    read: () => true,
+    create: isAdmin,
+    read: hasCompanyAccess("id"),
+    update: hasCompanyAccess("id"),
+    delete: isAdmin,
+  },
+  versions: {
+    drafts: true,
   },
   fields: [
     {
@@ -25,11 +34,11 @@ const Companies: CollectionConfig = {
     {
       name: "featureImages",
       type: "array",
-      label: "Company Feature Images",
+      label: "Feature Images",
       fields: [
         {
-          name: "featureImage",
-          label: "Company Feature Image",
+          name: "image",
+          label: "Image",
           type: "upload",
           relationTo: "media",
         },
@@ -37,19 +46,9 @@ const Companies: CollectionConfig = {
     },
     {
       name: "logo",
-      label: "Company Logo",
+      label: "Logo",
       type: "upload",
       relationTo: "media",
-    },
-    {
-      name: "mines",
-      label: "Mines",
-      type: "relationship",
-      relationTo: "mines",
-      hasMany: true,
-      admin: {
-        isSortable: true,
-      },
     },
     slug,
   ],
