@@ -8,15 +8,15 @@ const Sites: CollectionConfig = {
     useAsTitle: "name",
   },
   access: {
-    read: hasCompanyAccess("mine"),
-    // read: ({ req: { user } }) => {
-    //   console.log(user);
-    //   return {
-    //     mine: {
-    //       in: user.companies.mines,
-    //     },
-    //   };
-    // },
+    // read: hasCompanyAccess("mine"),
+    read: ({ req: { user } }) => {
+      console.log(user);
+      return {
+        mine: {
+          in: user.companies.mines,
+        },
+      };
+    },
   },
   fields: [
     {

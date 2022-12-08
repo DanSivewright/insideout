@@ -5,7 +5,7 @@ import { User } from "../payload-types";
 export const hasCompanyAccess =
   (collectionKey: string = "company"): Access<any, User> =>
   ({ req: { user } }) => {
-    // console.log(user.companies.mines);
+    console.log(user);
     if (!user) return false;
     if (user.roles.includes("admin")) return true;
     if (user.roles.includes("editor")) {
@@ -13,7 +13,14 @@ export const hasCompanyAccess =
         or: [
           {
             [collectionKey]: {
-              in: user.company,
+              in: user.companies.id,
+            },
+          },
+          {
+            [collectionKey]: {
+              mines: {
+                in: user.companies.mines,
+              },
             },
           },
           {

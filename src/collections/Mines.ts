@@ -9,10 +9,10 @@ const Mines: CollectionConfig = {
     useAsTitle: "name",
   },
   access: {
-    read: hasCompanyAccess(),
-    update: hasCompanyAccess(),
+    read: hasCompanyAccess("company"),
+    update: hasCompanyAccess("company"),
     delete: isAdmin,
-    create: hasCompanyAccess(),
+    create: hasCompanyAccess("company"),
   },
   fields: [
     {
