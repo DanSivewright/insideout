@@ -1,5 +1,4 @@
 import { CollectionConfig } from "payload/types";
-import { hasCompanyAccess } from "../access/hasCompanyAccess";
 import slug from "../fields/slug";
 
 const Sites: CollectionConfig = {
@@ -13,7 +12,7 @@ const Sites: CollectionConfig = {
       console.log(user);
       return {
         mine: {
-          in: user.companies.mines,
+          in: user?.companies?.mines,
         },
       };
     },

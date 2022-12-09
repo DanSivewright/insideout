@@ -1,6 +1,4 @@
 import { CollectionConfig } from "payload/types";
-import { isAdmin } from "../access/isAdmin";
-import { isAdminOrSelf } from "../access/isAdminOrSelf";
 
 const Procurements: CollectionConfig = {
   slug: "procurements",
@@ -57,14 +55,20 @@ const Procurements: CollectionConfig = {
                       relationTo: "users",
                       access: {
                         update: ({ req: { user } }) => {
-                          return Boolean(user?.roles?.includes("admin"));
+                          if (user?.roles?.includes("user")) {
+                            return false;
+                          }
+                          return true;
                         },
                         create: ({ req: { user } }) => {
-                          return Boolean(user?.roles?.includes("admin"));
+                          if (user?.roles?.includes("user")) {
+                            return false;
+                          }
+                          return true;
                         },
                       },
                       defaultValue: ({ user }) => {
-                        if (!user?.roles?.includes("admin")) {
+                        if (user?.roles?.includes("user")) {
                           return user.id;
                         }
                       },

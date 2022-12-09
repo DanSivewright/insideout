@@ -1,18 +1,10 @@
 import { CollectionConfig } from "payload/types";
-import { hasCompanyAccess } from "../access/hasCompanyAccess";
-import { isAdmin } from "../access/isAdmin";
 import slug from "../fields/slug";
 
 const Mines: CollectionConfig = {
   slug: "mines",
   admin: {
     useAsTitle: "name",
-  },
-  access: {
-    read: hasCompanyAccess("company"),
-    update: hasCompanyAccess("company"),
-    delete: isAdmin,
-    create: hasCompanyAccess("company"),
   },
   fields: [
     {
