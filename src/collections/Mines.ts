@@ -1,10 +1,14 @@
 import { CollectionConfig } from "payload/types";
+import { isCompanyEditor } from "../access/isCompanyEditor";
 import slug from "../fields/slug";
 
 const Mines: CollectionConfig = {
   slug: "mines",
   admin: {
     useAsTitle: "name",
+  },
+  access: {
+    read: isCompanyEditor("company"),
   },
   fields: [
     {

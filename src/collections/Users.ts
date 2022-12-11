@@ -1,27 +1,60 @@
 import { CollectionConfig } from "payload/types";
+import { isAdminFieldLevel } from "../access/isAdmin";
+import { isEditorOrSelf } from "../access/isEditorOrSelf";
 
 const Users: CollectionConfig = {
   slug: "users",
-  auth: true,
+  auth: {
+    depth: 0,
+  },
   admin: {
     useAsTitle: "name",
   },
+  access: {
+    read: isEditorOrSelf(),
+  },
   fields: [
     {
-      label: "Fist Name",
-      name: "firstName",
-      type: "text",
+      type: "row",
+      fields: [
+        {
+          label: "Fist Name",
+          name: "firstName",
+          type: "text",
+        },
+        {
+          label: "Last Name",
+          name: "lastName",
+          type: "text",
+        },
+      ],
     },
     {
-      label: "Last Name",
-      name: "lastName",
+      label: "Full Name",
+      name: "name",
       type: "text",
+      admin: {
+        condition: () => false,
+      },
+      hooks: {
+        beforeChange: [
+          ({ data, originalDoc }) => {
+            const first = data.firstName || originalDoc.firstName;
+            const last = data.lastName || originalDoc.lastName;
+
+            return `${first} ${last}`;
+          },
+        ],
+      },
     },
     {
-      name: "roles",
+      name: "role",
       saveToJWT: true,
       type: "select",
-      defaultValue: ["user"],
+      access: {
+        create: isAdminFieldLevel,
+        update: isAdminFieldLevel,
+      },
       options: [
         {
           label: "Admin",
@@ -42,9 +75,32 @@ const Users: CollectionConfig = {
       saveToJWT: true,
       type: "relationship",
       relationTo: "companies",
+      access: {
+        create: isAdminFieldLevel,
+        update: isAdminFieldLevel,
+      },
       admin: {
         description:
           "This field sets which company that this user has access to.",
+      },
+    },
+    {
+      name: "mine",
+      saveToJWT: true,
+      type: "relationship",
+      relationTo: "mines",
+      admin: {
+        description: "This field sets which mine that this user has access to.",
+      },
+    },
+    {
+      name: "sites",
+      saveToJWT: true,
+      type: "relationship",
+      relationTo: "sites",
+      hasMany: true,
+      admin: {
+        description: "This field sets which mine that this user has access to.",
       },
     },
   ],

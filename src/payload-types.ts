@@ -12,8 +12,11 @@ export interface Config {}
  */
 export interface User {
   id: string;
-  roles?: ("admin" | "editor" | "user")[];
-  companies?: string | Company;
+  firstName?: string;
+  lastName?: string;
+  name?: string;
+  role?: 'admin' | 'editor' | 'user';
+  company?: string | Company;
   email?: string;
   resetPasswordToken?: string;
   resetPasswordExpiration?: string;
@@ -38,7 +41,7 @@ export interface Company {
   }[];
   logo?: string | Media;
   slug?: string;
-  _status?: "draft" | "published";
+  _status?: 'draft' | 'published';
   createdAt: string;
   updatedAt: string;
 }
@@ -99,6 +102,7 @@ export interface Media {
 export interface Site {
   id: string;
   name: string;
+  mine: string | Mine;
   description: {
     [k: string]: unknown;
   }[];
@@ -137,12 +141,8 @@ export interface Procurement {
   id: string;
   site: string | Site;
   applicant?: string | User;
-  administrator?: string | User;
-  department?:
-    | "Department Option One"
-    | "Department Option Two"
-    | "Department Option Three"
-    | "Department Option Four";
+  administrator?: string;
+  department?: string;
   project: string;
   equipmentNumber: string;
   description: string;
@@ -157,7 +157,7 @@ export interface Procurement {
   quoteComment?: string;
   invoice?: string | Media;
   invoiceComment?: string;
-  _status?: "draft" | "published";
+  _status?: 'draft' | 'published';
   createdAt: string;
   updatedAt: string;
 }

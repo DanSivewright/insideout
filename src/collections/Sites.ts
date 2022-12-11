@@ -1,5 +1,7 @@
 import { CollectionConfig } from "payload/types";
+import { isCompanyEditor } from "../access/isCompanyEditor";
 import slug from "../fields/slug";
+import { Company } from "../payload-types";
 
 const Sites: CollectionConfig = {
   slug: "sites",
@@ -7,12 +9,20 @@ const Sites: CollectionConfig = {
     useAsTitle: "name",
   },
   access: {
-    // read: hasCompanyAccess("mine"),
-    read: ({ req: { user } }) => {
-      console.log(user);
+    // read: isCompanyEditor("mine", "company"),
+    read: async ({ req: { user, payload } }) => {
+      if (!user) return false;
+      if (user.role === "admin") return true;
+      const company: Company = await payload.findByID({
+        collection: "companies",
+        id: user.company,
+      });
+      if (!company) return false;
+
       return {
         mine: {
-          in: user?.companies?.mines,
+          // @ts-ignore
+          equals: company.mines?.[0],
         },
       };
     },

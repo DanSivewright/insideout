@@ -1,4 +1,5 @@
 import { CollectionConfig } from "payload/types";
+import { Company } from "../payload-types";
 
 const Procurements: CollectionConfig = {
   slug: "procurements",
@@ -6,20 +7,25 @@ const Procurements: CollectionConfig = {
     useAsTitle: "name",
   },
   access: {
-    update: ({ data }) => {
-      console.log(data);
+    // read: isCompanyEditor("site", "mine"),
+    read: async ({ req: { user, payload } }) => {
+      if (!user) return false;
+      if (user.role === "admin") return true;
+
+      const mines = await payload.find({
+        collection: "mines",
+        where: {},
+      });
+      console.log("MINES::: ", mines);
+      // if (!company) return false;
+      console.log();
       return true;
-    },
-    read: ({ req: { user } }) => {
-      if (Boolean(user?.roles?.includes("admin"))) return true;
-      return {
-        _status: {
-          equals: "published",
-        },
-        applicant: {
-          in: user.id,
-        },
-      };
+      // return {
+      //   mine: {
+      //     // @ts-ignore
+      //     equals: company.mines?.[0],
+      //   },
+      // };
     },
   },
   versions: {
@@ -55,20 +61,20 @@ const Procurements: CollectionConfig = {
                       relationTo: "users",
                       access: {
                         update: ({ req: { user } }) => {
-                          if (user?.roles?.includes("user")) {
+                          if (user?.role === "user") {
                             return false;
                           }
                           return true;
                         },
                         create: ({ req: { user } }) => {
-                          if (user?.roles?.includes("user")) {
+                          if (user?.role === "user") {
                             return false;
                           }
                           return true;
                         },
                       },
                       defaultValue: ({ user }) => {
-                        if (user?.roles?.includes("user")) {
+                        if (user?.role === "user") {
                           return user.id;
                         }
                       },

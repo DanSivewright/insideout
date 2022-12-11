@@ -1,4 +1,5 @@
 import { CollectionConfig } from "payload/types";
+import { isCompanyEditor } from "../access/isCompanyEditor";
 import slug from "../fields/slug";
 
 const Companies: CollectionConfig = {
@@ -6,6 +7,9 @@ const Companies: CollectionConfig = {
   admin: {
     useAsTitle: "name",
     preview: () => null,
+  },
+  access: {
+    read: isCompanyEditor("id"),
   },
   versions: {
     drafts: true,
