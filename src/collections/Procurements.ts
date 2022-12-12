@@ -1,35 +1,18 @@
 import { CollectionConfig } from "payload/types";
-import { Company } from "../payload-types";
+import { isCompanyEditor } from "../access/isCompanyEditor";
+import { populateAuthor } from "../hooks/populateAuthor";
+import { populateCompany } from "../hooks/populateCompany";
 
 const Procurements: CollectionConfig = {
   slug: "procurements",
   admin: {
     useAsTitle: "name",
   },
-  access: {
-    // read: isCompanyEditor("site", "mine"),
-    read: async ({ req: { user, payload } }) => {
-      if (!user) return false;
-      if (user.role === "admin") return true;
-
-      const mines = await payload.find({
-        collection: "mines",
-        where: {},
-      });
-      console.log("MINES::: ", mines);
-      // if (!company) return false;
-      console.log();
-      return true;
-      // return {
-      //   mine: {
-      //     // @ts-ignore
-      //     equals: company.mines?.[0],
-      //   },
-      // };
-    },
-  },
   versions: {
     drafts: true,
+  },
+  access: {
+    read: isCompanyEditor("company"),
   },
   fields: [
     {
@@ -38,6 +21,31 @@ const Procurements: CollectionConfig = {
       relationTo: "sites",
       required: true,
       admin: {
+        position: "sidebar",
+      },
+    },
+    {
+      name: "company",
+      label: "Company",
+      type: "relationship",
+      relationTo: "companies",
+      admin: {
+        readOnly: true,
+        position: "sidebar",
+      },
+      hooks: {
+        beforeChange: [populateCompany],
+      },
+    },
+    {
+      name: "author",
+      relationTo: "users",
+      type: "relationship",
+      hooks: {
+        beforeChange: [populateAuthor],
+      },
+      admin: {
+        readOnly: true,
         position: "sidebar",
       },
     },

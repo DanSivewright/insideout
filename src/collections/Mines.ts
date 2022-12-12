@@ -42,11 +42,7 @@ const Mines: CollectionConfig = {
       type: "relationship",
       relationTo: "companies",
       required: true,
-      defaultValue: ({ user }) => {
-        if (!user.roles.includes("admin") && user.company.id) {
-          return user.company.id;
-        }
-      },
+      defaultValue: ({ user }) => user.company,
     },
     slug,
   ],

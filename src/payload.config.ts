@@ -4,25 +4,16 @@ import path from "path";
 import Users from "./collections/Users";
 import Companies from "./collections/Companies";
 import Media from "./collections/Media";
-import Sites from "./collections/Sites";
 import Mines from "./collections/Mines";
 import Procurements from "./collections/Procurements";
+import Sites from "./collections/Sites";
 
 export default buildConfig({
   serverURL: "http://localhost:3000",
   admin: {
     user: Users.slug,
   },
-  collections: [
-    Users,
-    Companies,
-    Media,
-    Sites,
-    Mines,
-    Procurements,
-    // Add Collections here
-    // Examples,
-  ],
+  collections: [Users, Companies, Media, Mines, Sites, Procurements],
   typescript: {
     outputFile: path.resolve(__dirname, "payload-types.ts"),
   },

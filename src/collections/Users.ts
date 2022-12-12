@@ -84,25 +84,6 @@ const Users: CollectionConfig = {
           "This field sets which company that this user has access to.",
       },
     },
-    {
-      name: "mine",
-      saveToJWT: true,
-      type: "relationship",
-      relationTo: "mines",
-      admin: {
-        description: "This field sets which mine that this user has access to.",
-      },
-    },
-    {
-      name: "sites",
-      saveToJWT: true,
-      type: "relationship",
-      relationTo: "sites",
-      hasMany: true,
-      admin: {
-        description: "This field sets which mine that this user has access to.",
-      },
-    },
   ],
 };
 

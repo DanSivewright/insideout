@@ -97,25 +97,6 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "sites".
- */
-export interface Site {
-  id: string;
-  name: string;
-  mine: string | Mine;
-  description: {
-    [k: string]: unknown;
-  }[];
-  featureImages: {
-    image?: string | Media;
-    id?: string;
-  }[];
-  slug?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "mines".
  */
 export interface Mine {
@@ -135,29 +116,13 @@ export interface Mine {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "procurements".
+ * via the `definition` "sites".
  */
-export interface Procurement {
+export interface Site {
   id: string;
-  site: string | Site;
-  applicant?: string | User;
-  administrator?: string;
-  department?: string;
-  project: string;
-  equipmentNumber: string;
-  description: string;
-  item: {
-    quantity: number;
-    unit: string;
-    description?: string;
-    partNumber?: string;
-    id?: string;
-  }[];
-  quote?: string | Media;
-  quoteComment?: string;
-  invoice?: string | Media;
-  invoiceComment?: string;
-  _status?: 'draft' | 'published';
+  name: string;
+  company: string | Company;
+  mine: string | Mine;
   createdAt: string;
   updatedAt: string;
 }
