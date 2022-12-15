@@ -9,6 +9,7 @@ const Users: CollectionConfig = {
   },
   admin: {
     useAsTitle: "name",
+    group: "Admin",
   },
   access: {
     read: isEditorOrSelf(),

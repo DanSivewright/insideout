@@ -1,13 +1,18 @@
 import { CollectionConfig } from "payload/types";
+import { belongsToCompany } from "../access/belongsToCompany";
 import { isCompanyEditor } from "../access/isCompanyEditor";
 
 const Sites: CollectionConfig = {
   slug: "sites",
   admin: {
     useAsTitle: "name",
+    group: "Admin",
   },
   access: {
-    read: isCompanyEditor("company"),
+    create: isCompanyEditor("company"),
+    delete: isCompanyEditor("company"),
+    update: isCompanyEditor("company"),
+    read: belongsToCompany("company"),
   },
   fields: [
     {

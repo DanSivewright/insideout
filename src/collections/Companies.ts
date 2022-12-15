@@ -1,15 +1,20 @@
 import { CollectionConfig } from "payload/types";
+import { belongsToCompany } from "../access/belongsToCompany";
+import { isAdmin } from "../access/isAdmin";
 import { isCompanyEditor } from "../access/isCompanyEditor";
-import slug from "../fields/slug";
 
 const Companies: CollectionConfig = {
   slug: "companies",
   admin: {
     useAsTitle: "name",
     preview: () => null,
+    group: "Admin",
   },
   access: {
-    read: isCompanyEditor("id"),
+    read: belongsToCompany("id"),
+    update: isCompanyEditor("id"),
+    delete: isAdmin,
+    create: isAdmin,
   },
   versions: {
     drafts: true,
@@ -46,7 +51,6 @@ const Companies: CollectionConfig = {
       type: "upload",
       relationTo: "media",
     },
-    slug,
   ],
 };
 

@@ -1,4 +1,6 @@
 import { CollectionConfig } from "payload/types";
+import { belongsToCompany } from "../access/belongsToCompany";
+import { belongsToCompanyAndAuthored } from "../access/belongsToCompanyAndAuthored";
 import { isCompanyEditor } from "../access/isCompanyEditor";
 import { populateAuthor } from "../hooks/populateAuthor";
 import { populateCompany } from "../hooks/populateCompany";
@@ -7,12 +9,16 @@ const Procurements: CollectionConfig = {
   slug: "procurements",
   admin: {
     useAsTitle: "name",
+    group: "Procurements",
   },
   versions: {
     drafts: true,
   },
   access: {
-    read: isCompanyEditor("company"),
+    delete: isCompanyEditor("company"),
+    update: belongsToCompany("company"),
+    read: belongsToCompanyAndAuthored("company"),
+    create: belongsToCompany("company"),
   },
   fields: [
     {

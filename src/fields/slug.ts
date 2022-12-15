@@ -1,18 +1,22 @@
-import { Field } from 'payload/types';
-import formatSlug from '../utilities/formatSlug';
+import { Field } from "payload/types";
+import formatSlug from "../utilities/formatSlug";
+import deepMerge from "../utilities/deepMerge";
 
-const slug: Field = {
-  name: 'slug',
-  label: 'Slug',
-  type: 'text',
-  admin: {
-    position: 'sidebar',
-  },
-  hooks: {
-    beforeValidate: [
-      formatSlug('title'),
-    ],
-  },
-};
+type Slug = (fieldToUse?: string, overrides?: Partial<Field>) => Field;
 
-export default slug;
+export const slugField: Slug = (fieldToUse = "title", overrides) =>
+  deepMerge<Field, Partial<Field>>(
+    {
+      name: "slug",
+      label: "Slug",
+      type: "text",
+      index: true,
+      admin: {
+        position: "sidebar",
+      },
+      hooks: {
+        beforeValidate: [formatSlug(fieldToUse)],
+      },
+    },
+    overrides
+  );

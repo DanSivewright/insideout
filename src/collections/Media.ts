@@ -27,6 +27,7 @@ const Media: CollectionConfig = {
   },
   admin: {
     useAsTitle: "filename",
+    group: "Content",
   },
   upload: {
     adminThumbnail: "card",

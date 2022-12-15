@@ -7,13 +7,34 @@ import Media from "./collections/Media";
 import Mines from "./collections/Mines";
 import Procurements from "./collections/Procurements";
 import Sites from "./collections/Sites";
+import Menus from "./collections/Menus";
+import { Pages } from "./collections/Pages";
+import { Logo } from "./components/Logo";
+import { Icon } from "./components/Icon";
 
 export default buildConfig({
-  serverURL: "http://localhost:3000",
+  serverURL: "http://localhost:8080",
   admin: {
     user: Users.slug,
+    components: {
+      graphics: {
+        Logo: Logo,
+        Icon: Icon,
+      },
+    },
   },
-  collections: [Users, Companies, Media, Mines, Sites, Procurements],
+  collections: [
+    Users,
+    Companies,
+    Media,
+    Mines,
+    Sites,
+    Procurements,
+    Menus,
+    Pages,
+    // Add Collections here
+    // Examples,
+  ],
   typescript: {
     outputFile: path.resolve(__dirname, "payload-types.ts"),
   },

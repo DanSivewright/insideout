@@ -15,7 +15,7 @@ export interface User {
   firstName?: string;
   lastName?: string;
   name?: string;
-  role?: 'admin' | 'editor' | 'user';
+  role?: "admin" | "editor" | "user";
   company?: string | Company;
   email?: string;
   resetPasswordToken?: string;
@@ -40,8 +40,7 @@ export interface Company {
     id?: string;
   }[];
   logo?: string | Media;
-  slug?: string;
-  _status?: 'draft' | 'published';
+  _status?: "draft" | "published";
   createdAt: string;
   updatedAt: string;
 }
@@ -110,7 +109,6 @@ export interface Mine {
     id?: string;
   }[];
   company: string | Company;
-  slug?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -123,6 +121,189 @@ export interface Site {
   name: string;
   company: string | Company;
   mine: string | Mine;
+  createdAt: string;
+  updatedAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "procurements".
+ */
+export interface Procurement {
+  id: string;
+  site: string | Site;
+  company?: string | Company;
+  author?: string | User;
+  applicant?: string | User;
+  administrator?: string;
+  department?: string;
+  project: string;
+  equipmentNumber: string;
+  description: string;
+  item: {
+    quantity: number;
+    unit: string;
+    description?: string;
+    partNumber?: string;
+    id?: string;
+  }[];
+  quote?: string | Media;
+  quoteComment?: string;
+  invoice?: string | Media;
+  invoiceComment?: string;
+  _status?: "draft" | "published";
+  createdAt: string;
+  updatedAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "menus".
+ */
+export interface Menu {
+  id: string;
+  navItems: {
+    link: {
+      type?: "reference" | "custom";
+      newTab?: boolean;
+      reference: {
+        value: string | Page;
+        relationTo: "pages";
+      };
+      url: string;
+      label: string;
+    };
+    id?: string;
+  }[];
+  createdAt: string;
+  updatedAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: string;
+  title: string;
+  hero: {
+    type: "highImpact" | "mediumImpact" | "lowImpact";
+    richText: {
+      [k: string]: unknown;
+    }[];
+    links: {
+      link: {
+        type?: "reference" | "custom";
+        newTab?: boolean;
+        reference: {
+          value: string | Page;
+          relationTo: "pages";
+        };
+        url: string;
+        label: string;
+        appearance?: "default" | "primary" | "secondary";
+      };
+      id?: string;
+    }[];
+    media: string | Media;
+  };
+  layout: (
+    | {
+        ctaBackgroundColor?: "white" | "black";
+        richText: {
+          [k: string]: unknown;
+        }[];
+        links: {
+          link: {
+            type?: "reference" | "custom";
+            newTab?: boolean;
+            reference: {
+              value: string | Page;
+              relationTo: "pages";
+            };
+            url: string;
+            label: string;
+            appearance?: "primary" | "secondary";
+          };
+          id?: string;
+        }[];
+        id?: string;
+        blockName?: string;
+        blockType: "cta";
+      }
+    | {
+        contentBackgroundColor?: "white" | "black";
+        layout?:
+          | "oneColumn"
+          | "twoThirdsOneThird"
+          | "halfAndHalf"
+          | "threeColumns";
+        columnOne: {
+          richText: {
+            [k: string]: unknown;
+          }[];
+          enableLink?: boolean;
+          link: {
+            type?: "reference" | "custom";
+            newTab?: boolean;
+            reference: {
+              value: string | Page;
+              relationTo: "pages";
+            };
+            url: string;
+            label: string;
+            appearance?: "default" | "primary" | "secondary";
+          };
+        };
+        columnTwo: {
+          richText: {
+            [k: string]: unknown;
+          }[];
+          enableLink?: boolean;
+          link: {
+            type?: "reference" | "custom";
+            newTab?: boolean;
+            reference: {
+              value: string | Page;
+              relationTo: "pages";
+            };
+            url: string;
+            label: string;
+            appearance?: "default" | "primary" | "secondary";
+          };
+        };
+        columnThree: {
+          richText: {
+            [k: string]: unknown;
+          }[];
+          enableLink?: boolean;
+          link: {
+            type?: "reference" | "custom";
+            newTab?: boolean;
+            reference: {
+              value: string | Page;
+              relationTo: "pages";
+            };
+            url: string;
+            label: string;
+            appearance?: "default" | "primary" | "secondary";
+          };
+        };
+        id?: string;
+        blockName?: string;
+        blockType: "content";
+      }
+    | {
+        mediaBlockBackgroundColor?: "white" | "black";
+        position?: "default" | "fullscreen";
+        media: string | Media;
+        caption?: {
+          [k: string]: unknown;
+        }[];
+        id?: string;
+        blockName?: string;
+        blockType: "mediaBlock";
+      }
+  )[];
+  slug?: string;
+  _status?: "draft" | "published";
   createdAt: string;
   updatedAt: string;
 }

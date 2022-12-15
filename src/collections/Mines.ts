@@ -1,14 +1,18 @@
 import { CollectionConfig } from "payload/types";
+import { belongsToCompany } from "../access/belongsToCompany";
 import { isCompanyEditor } from "../access/isCompanyEditor";
-import slug from "../fields/slug";
 
 const Mines: CollectionConfig = {
   slug: "mines",
   admin: {
     useAsTitle: "name",
+    group: "Admin",
   },
   access: {
-    read: isCompanyEditor("company"),
+    delete: isCompanyEditor("company"),
+    update: isCompanyEditor("company"),
+    create: isCompanyEditor("company"),
+    read: belongsToCompany("company"),
   },
   fields: [
     {
@@ -44,7 +48,6 @@ const Mines: CollectionConfig = {
       required: true,
       defaultValue: ({ user }) => user.company,
     },
-    slug,
   ],
 };
 
