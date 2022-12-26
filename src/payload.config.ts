@@ -13,7 +13,10 @@ import { Logo } from "./components/Logo";
 import { Icon } from "./components/Icon";
 
 export default buildConfig({
-  serverURL: "http://localhost:8080",
+  serverURL: process.env.PAYLOAD_PUBLIC_BASE_DNS,
+  rateLimit: {
+    trustProxy: true,
+  },
   admin: {
     user: Users.slug,
     components: {
