@@ -11,7 +11,10 @@ import Menus from "./collections/Menus";
 import { Pages } from "./collections/Pages";
 
 export default buildConfig({
-  serverURL: "http://localhost:3000",
+  serverURL:
+    process.env.NODE_ENV == "development"
+      ? "http://localhost:3000"
+      : process.env.PAYLOAD_PUBLIC_BASE_DNS,
   admin: {
     user: Users.slug,
   },
