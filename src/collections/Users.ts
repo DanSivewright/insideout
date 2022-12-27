@@ -71,20 +71,20 @@ const Users: CollectionConfig = {
         },
       ],
     },
-    {
-      name: "company",
-      saveToJWT: true,
-      type: "relationship",
-      relationTo: "companies",
-      access: {
-        create: isAdminFieldLevel,
-        update: isAdminFieldLevel,
-      },
-      admin: {
-        description:
-          "This field sets which company that this user has access to.",
-      },
-    },
+    // {
+    //   name: "company",
+    //   saveToJWT: true,
+    //   type: "relationship",
+    //   relationTo: "companies",
+    //   access: {
+    //     create: isAdminFieldLevel,
+    //     update: isAdminFieldLevel,
+    //   },
+    //   admin: {
+    //     description:
+    //       "This field sets which company that this user has access to.",
+    //   },
+    // },
   ],
 };
 
