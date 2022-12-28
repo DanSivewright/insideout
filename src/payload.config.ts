@@ -9,6 +9,8 @@ import Sites from "./collections/Sites";
 import Procurements from "./collections/Procurements";
 import Menus from "./collections/Menus";
 import { Pages } from "./collections/Pages";
+import { Logo } from "./components/Logo";
+import { Icon } from "./components/Icon";
 
 export default buildConfig({
   serverURL:
@@ -17,6 +19,15 @@ export default buildConfig({
       : process.env.PAYLOAD_PUBLIC_BASE_DNS,
   admin: {
     user: Users.slug,
+    components: {
+      graphics: {
+        Logo: Logo,
+        Icon: Icon,
+      },
+    },
+  },
+  rateLimit: {
+    trustProxy: true,
   },
   collections: [
     Users,
