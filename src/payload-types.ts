@@ -131,8 +131,8 @@ export interface Site {
 export interface Procurement {
   id: string;
   site: string | Site;
-  state?: 'accepted' | 'rejected' | 'finalized';
   company?: string | Company;
+  state?: 'accepted' | 'rejected' | 'finalized';
   author?: string | User;
   applicant?: string | User;
   administrator?: string;
@@ -142,9 +142,9 @@ export interface Procurement {
   description: string;
   item: {
     quantity: number;
-    unit: string;
     description?: string;
     partNumber?: string;
+    image?: string | Media;
     id?: string;
   }[];
   quote?: string | Media;

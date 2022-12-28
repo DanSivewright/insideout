@@ -5,18 +5,18 @@ import Users from "./collections/Users";
 import Companies from "./collections/Companies";
 import Media from "./collections/Media";
 import Mines from "./collections/Mines";
-import Sites from "./collections/Sites";
 import Procurements from "./collections/Procurements";
+import Sites from "./collections/Sites";
 import Menus from "./collections/Menus";
 import { Pages } from "./collections/Pages";
 import { Logo } from "./components/Logo";
 import { Icon } from "./components/Icon";
 
 export default buildConfig({
-  serverURL:
-    process.env.NODE_ENV == "development"
-      ? "http://localhost:3000"
-      : process.env.PAYLOAD_PUBLIC_BASE_DNS,
+  serverURL: process.env.PAYLOAD_PUBLIC_BASE_DNS,
+  rateLimit: {
+    trustProxy: true,
+  },
   admin: {
     user: Users.slug,
     components: {
@@ -25,9 +25,6 @@ export default buildConfig({
         Icon: Icon,
       },
     },
-  },
-  rateLimit: {
-    trustProxy: true,
   },
   collections: [
     Users,
@@ -38,6 +35,8 @@ export default buildConfig({
     Procurements,
     Menus,
     Pages,
+    // Add Collections here
+    // Examples,
   ],
   typescript: {
     outputFile: path.resolve(__dirname, "payload-types.ts"),

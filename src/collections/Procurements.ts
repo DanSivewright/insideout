@@ -2,6 +2,7 @@ import { CollectionConfig } from "payload/types";
 import { belongsToCompany } from "../access/belongsToCompany";
 import { belongsToCompanyAndAuthored } from "../access/belongsToCompanyAndAuthored";
 import { isCompanyEditor } from "../access/isCompanyEditor";
+import { isProcFinalizedAndPublished } from "../access/isProcFinalizedAndPublished";
 import { populateAuthor } from "../hooks/populateAuthor";
 import { populateCompany } from "../hooks/populateCompany";
 
@@ -36,12 +37,26 @@ const Procurements: CollectionConfig = {
       type: "relationship",
       relationTo: "companies",
       admin: {
+        condition: () => false,
         readOnly: true,
         position: "sidebar",
       },
       hooks: {
         beforeChange: [populateCompany],
       },
+    },
+    {
+      admin: {
+        position: "sidebar",
+      },
+      name: "state",
+      label: "State",
+      type: "select",
+      options: [
+        { label: "Accepted", value: "accepted" },
+        { label: "Rejected", value: "rejected" },
+        { label: "Finalized", value: "finalized" },
+      ],
     },
     {
       name: "author",
@@ -51,6 +66,7 @@ const Procurements: CollectionConfig = {
         beforeChange: [populateAuthor],
       },
       admin: {
+        condition: () => false,
         readOnly: true,
         position: "sidebar",
       },
@@ -160,7 +176,11 @@ const Procurements: CollectionConfig = {
                 {
                   name: "item",
                   type: "array",
-                  label: "Line Items",
+                  // label: "Line Items",
+                  access: {
+                    create: (e) => !isProcFinalizedAndPublished(e),
+                    update: (e) => !isProcFinalizedAndPublished(e),
+                  },
                   minRows: 1,
                   labels: {
                     singular: "Line Item",
@@ -179,14 +199,9 @@ const Procurements: CollectionConfig = {
                           admin: {
                             width: "15%",
                           },
-                        },
-                        {
-                          name: "unit",
-                          label: "Unit",
-                          type: "text",
-                          required: true,
-                          admin: {
-                            width: "15%",
+                          access: {
+                            create: (e) => !isProcFinalizedAndPublished(e),
+                            update: (e) => !isProcFinalizedAndPublished(e),
                           },
                         },
                         {
@@ -194,7 +209,11 @@ const Procurements: CollectionConfig = {
                           label: "Description",
                           type: "text",
                           admin: {
-                            width: "60%",
+                            width: "70%",
+                          },
+                          access: {
+                            create: (e) => !isProcFinalizedAndPublished(e),
+                            update: (e) => !isProcFinalizedAndPublished(e),
                           },
                         },
                         {
@@ -202,10 +221,34 @@ const Procurements: CollectionConfig = {
                           label: "Part No.",
                           type: "text",
                           admin: {
-                            width: "10%",
+                            width: "15%",
+                          },
+                          access: {
+                            create: (e) => !isProcFinalizedAndPublished(e),
+                            update: (e) => !isProcFinalizedAndPublished(e),
                           },
                         },
                       ],
+                    },
+                    {
+                      admin: {
+                        condition: (data) => {
+                          const { _status = undefined, state = undefined } =
+                            data;
+                          if (
+                            _status === "published" &&
+                            state === "finalized"
+                          ) {
+                            return true;
+                          }
+                          return false;
+                        },
+                      },
+                      name: "image",
+                      label: "Delivery Proof",
+                      type: "upload",
+                      relationTo: "media",
+                      unique: true,
                     },
                   ],
                   admin: {
@@ -230,11 +273,19 @@ const Procurements: CollectionConfig = {
               type: "upload",
               relationTo: "media",
               unique: true,
+              access: {
+                create: isProcFinalizedAndPublished,
+                update: isProcFinalizedAndPublished,
+              },
             },
             {
               name: "quoteComment",
               label: "Comment",
               type: "text",
+              access: {
+                create: isProcFinalizedAndPublished,
+                update: isProcFinalizedAndPublished,
+              },
             },
           ],
         },
@@ -247,11 +298,19 @@ const Procurements: CollectionConfig = {
               type: "upload",
               relationTo: "media",
               unique: true,
+              access: {
+                create: isProcFinalizedAndPublished,
+                update: isProcFinalizedAndPublished,
+              },
             },
             {
               name: "invoiceComment",
               label: "Comment",
               type: "text",
+              access: {
+                create: isProcFinalizedAndPublished,
+                update: isProcFinalizedAndPublished,
+              },
             },
           ],
         },
