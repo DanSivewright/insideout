@@ -19,6 +19,9 @@ export default buildConfig({
   },
   admin: {
     user: Users.slug,
+    meta: {
+      titleSuffix: "- Insideout",
+    },
     components: {
       graphics: {
         Logo: Logo,
