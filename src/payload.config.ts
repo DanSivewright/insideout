@@ -36,8 +36,8 @@ export default buildConfig({
     Mines,
     Sites,
     Procurements,
-    Menus,
-    Pages,
+    // Menus,
+    // Pages,
     // Add Collections here
     // Examples,
   ],
