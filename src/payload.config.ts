@@ -11,6 +11,7 @@ import Menus from "./collections/Menus";
 import { Pages } from "./collections/Pages";
 import { Logo } from "./components/Logo";
 import { Icon } from "./components/Icon";
+import CSV from "./collections/CSV";
 
 export default buildConfig({
   serverURL: process.env.PAYLOAD_PUBLIC_BASE_DNS,
@@ -36,6 +37,7 @@ export default buildConfig({
     Mines,
     Sites,
     Procurements,
+    CSV,
     // Menus,
     // Pages,
     // Add Collections here

@@ -1,16 +1,62 @@
-import { CollectionConfig } from "payload/types";
+import payload from "payload";
+import { CollectionBeforeOperationHook, CollectionConfig } from "payload/types";
 import { belongsToCompany } from "../access/belongsToCompany";
 import { belongsToCompanyAndAuthored } from "../access/belongsToCompanyAndAuthored";
 import { isCompanyEditor } from "../access/isCompanyEditor";
 import { isProcFinalizedAndPublished } from "../access/isProcFinalizedAndPublished";
 import { populateAuthor } from "../hooks/populateAuthor";
 import { populateCompany } from "../hooks/populateCompany";
+import Papa from "papaparse";
 
 const Procurements: CollectionConfig = {
   slug: "procurements",
   admin: {
     useAsTitle: "name",
     group: "Procurements",
+  },
+  hooks: {
+    beforeChange: [
+      async ({ data }) => {
+        // console.log("data::: ", data);
+        if (!data.csv) return data;
+        const csvRes = await payload.findByID({
+          collection: "csv",
+          id: data.csv,
+        });
+
+        // console.log("csv::: ", csv);
+        const res = await fetch(csvRes.url);
+        const csv = await res.text();
+
+        const lines = csv.split("\n");
+
+        const headers = lines[0]
+          .split(",")
+          .map((header) => header.replace(/\r/g, "").trim().toLowerCase());
+
+        const json = [];
+
+        for (let i = 1; i < lines.length; i++) {
+          const values = lines[i]
+            .split(",")
+            .map((value) => value.replace(/\r/g, "").trim());
+
+          const obj = {};
+
+          headers.forEach((header, index) => {
+            obj[header] = values[index];
+          });
+
+          if (Object.values(obj).join("")) json.push(obj);
+        }
+
+        return {
+          ...data,
+          item: json,
+          csv: null,
+        };
+      },
+    ],
   },
   versions: {
     drafts: true,
@@ -174,9 +220,14 @@ const Procurements: CollectionConfig = {
               type: "collapsible",
               fields: [
                 {
+                  type: "upload",
+                  name: "csv",
+                  relationTo: "csv",
+                  label: "Upload from CSV",
+                },
+                {
                   name: "item",
                   type: "array",
-                  // label: "Line Items",
                   access: {
                     create: (e) => !isProcFinalizedAndPublished(e),
                     update: (e) => !isProcFinalizedAndPublished(e),
@@ -217,8 +268,8 @@ const Procurements: CollectionConfig = {
                           },
                         },
                         {
-                          name: "partNumber",
-                          label: "Part No.",
+                          name: "code",
+                          label: "Code",
                           type: "text",
                           admin: {
                             width: "15%",
