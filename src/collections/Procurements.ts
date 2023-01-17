@@ -16,14 +16,16 @@ const Procurements: CollectionConfig = {
   hooks: {
     beforeChange: [
       async ({ data }) => {
-        // console.log("data::: ", data);
-        if (!data.csv) return data;
+        // if (!data.csv) return data;
         const csvRes = await payload.findByID({
           collection: "csv",
           id: data.csv,
         });
 
-        // console.log("csv::: ", csv);
+        if (!csvRes) {
+          return data;
+        }
+
         const res = await fetch(csvRes.url);
         const csv = await res.text();
 
@@ -32,6 +34,7 @@ const Procurements: CollectionConfig = {
         const headers = lines[0]
           .split(",")
           .map((header) => header.replace(/\r/g, "").trim().toLowerCase());
+        console.log("headeres::: ", headers);
 
         const json = [];
 
@@ -47,6 +50,20 @@ const Procurements: CollectionConfig = {
           });
 
           if (Object.values(obj).join("")) json.push(obj);
+        }
+
+        await payload.delete({
+          collection: "csv",
+          id: data.csv,
+        });
+
+        if (
+          !headers.includes("quantity") ||
+          !headers.includes("description") ||
+          !headers.includes("code")
+        ) {
+          // return data;
+          throw new Error("CSV is not formatted correctly");
         }
 
         return {
@@ -223,6 +240,10 @@ const Procurements: CollectionConfig = {
                   name: "csv",
                   relationTo: "csv",
                   label: "Upload from CSV",
+                  admin: {
+                    description:
+                      "Please that your CSV contains the following headers: Quantity, Description & Code",
+                  },
                 },
                 {
                   name: "item",

@@ -14,6 +14,7 @@ const CSV: CollectionConfig = {
   slug: "csv",
   access: {
     read: (): boolean => true, // Everyone can read csv
+    create: (): boolean => true, // Everyone can read csv
   },
   admin: {
     useAsTitle: "filename",
