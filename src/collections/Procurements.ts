@@ -6,7 +6,6 @@ import { isCompanyEditor } from "../access/isCompanyEditor";
 import { isProcFinalizedAndPublished } from "../access/isProcFinalizedAndPublished";
 import { populateAuthor } from "../hooks/populateAuthor";
 import { populateCompany } from "../hooks/populateCompany";
-import Papa from "papaparse";
 
 const Procurements: CollectionConfig = {
   slug: "procurements",
