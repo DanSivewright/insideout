@@ -7,11 +7,13 @@ import Media from "./collections/Media";
 import Mines from "./collections/Mines";
 import Procurements from "./collections/Procurements";
 import Sites from "./collections/Sites";
-import Menus from "./collections/Menus";
-import { Pages } from "./collections/Pages";
 import { Logo } from "./components/Logo";
 import { Icon } from "./components/Icon";
 import CSV from "./collections/CSV";
+import { CustomCell } from "./components/CustomCell";
+import { LinkToDownload } from "./components/LinkToDownload";
+import { ShortCut } from "./components/ShortCut";
+import ReturnNull from "./components/ReturnNull";
 
 export default buildConfig({
   serverURL: process.env.PAYLOAD_PUBLIC_BASE_DNS,
@@ -24,25 +26,21 @@ export default buildConfig({
       titleSuffix: "- Insideout",
     },
     components: {
+      Nav: ReturnNull,
+      afterDashboard: [ShortCut],
+      routes: [
+        {
+          path: "/download",
+          Component: CustomCell,
+        },
+      ],
       graphics: {
         Logo: Logo,
         Icon: Icon,
       },
     },
   },
-  collections: [
-    Users,
-    Companies,
-    Media,
-    Mines,
-    Sites,
-    Procurements,
-    CSV,
-    // Menus,
-    // Pages,
-    // Add Collections here
-    // Examples,
-  ],
+  collections: [Users, Companies, Media, Mines, Sites, Procurements, CSV],
   typescript: {
     outputFile: path.resolve(__dirname, "payload-types.ts"),
   },

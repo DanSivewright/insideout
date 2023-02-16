@@ -7,6 +7,20 @@ export const belongsToCompany =
   ({ req: { user } }) => {
     if (!user) return false;
     if (user.role === "admin") return true;
+    if (user.role === "editor") {
+      return {
+        [collectionKey]: {
+          equals: user.company,
+        },
+      };
+    }
+    return false;
+  };
+export const belongsToCompanyAsUser =
+  (collectionKey: string = "company"): Access<any, User> =>
+  ({ req: { user } }) => {
+    if (!user) return false;
+    if (user.role === "admin") return true;
     if (user.role === "editor" || user.role === "user") {
       return {
         [collectionKey]: {

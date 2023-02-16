@@ -130,21 +130,20 @@ export interface Site {
  */
 export interface Procurement {
   id: string;
-  site: string | Site;
   company?: string | Company;
   state?: 'accepted' | 'rejected' | 'finalized';
   author?: string | User;
   applicant?: string | User;
   administrator?: string;
   department?: string;
-  project: string;
-  equipmentNumber: string;
+  site: string | Site;
   description: string;
   csv?: string | Csv;
   item: {
     quantity: number;
-    description?: string;
+    equipmentNumber?: string;
     code?: string;
+    description?: string;
     image?: string | Media;
     id?: string;
   }[];

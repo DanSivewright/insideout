@@ -1,9 +1,15 @@
 import payload from "payload";
 import { CollectionBeforeOperationHook, CollectionConfig } from "payload/types";
-import { belongsToCompany } from "../access/belongsToCompany";
+import {
+  belongsToCompany,
+  belongsToCompanyAsUser,
+} from "../access/belongsToCompany";
 import { belongsToCompanyAndAuthored } from "../access/belongsToCompanyAndAuthored";
 import { isCompanyEditor } from "../access/isCompanyEditor";
 import { isProcFinalizedAndPublished } from "../access/isProcFinalizedAndPublished";
+import { CustomCell } from "../components/CustomCell";
+import { Logo } from "../components/Logo";
+import { ProcDownload } from "../components/ProcDownload";
 import { populateAuthor } from "../hooks/populateAuthor";
 import { populateCompany } from "../hooks/populateCompany";
 
@@ -12,11 +18,13 @@ const Procurements: CollectionConfig = {
   admin: {
     useAsTitle: "name",
     group: "Procurements",
+    // hideAPIURL: true,
   },
   hooks: {
     beforeChange: [
       async ({ data }) => {
-        // if (!data.csv) return data;
+        if (!data.csv) return data;
+
         const csvRes = await payload.findByID({
           collection: "csv",
           id: data.csv,
@@ -34,7 +42,6 @@ const Procurements: CollectionConfig = {
         const headers = lines[0]
           .split(",")
           .map((header) => header.replace(/\r/g, "").trim().toLowerCase());
-        console.log("headeres::: ", headers);
 
         const json = [];
 
@@ -79,20 +86,11 @@ const Procurements: CollectionConfig = {
   },
   access: {
     delete: isCompanyEditor("company"),
-    update: belongsToCompany("company"),
+    update: belongsToCompanyAndAuthored("company"),
     read: belongsToCompanyAndAuthored("company"),
-    create: belongsToCompany("company"),
+    create: belongsToCompanyAsUser("company"),
   },
   fields: [
-    {
-      name: "site",
-      type: "relationship",
-      relationTo: "sites",
-      required: true,
-      admin: {
-        position: "sidebar",
-      },
-    },
     {
       name: "company",
       label: "Company",
@@ -106,6 +104,21 @@ const Procurements: CollectionConfig = {
       hooks: {
         beforeChange: [populateCompany],
       },
+    },
+    {
+      name: "download",
+      type: "ui",
+      admin: {
+        position: "sidebar",
+        components: {
+          Field: ProcDownload,
+        },
+      },
+      // admin: {
+      //   components: {
+      //     Cell: Logo,
+      //   },
+      // },
     },
     {
       admin: {
@@ -196,9 +209,9 @@ const Procurements: CollectionConfig = {
                       },
                     },
                     {
-                      name: "project",
-                      label: "Project",
-                      type: "text",
+                      name: "site",
+                      type: "relationship",
+                      relationTo: "sites",
                       required: true,
                       admin: {
                         width: "50%",
@@ -210,21 +223,12 @@ const Procurements: CollectionConfig = {
                   type: "row",
                   fields: [
                     {
-                      name: "equipmentNumber",
-                      label: "Equipment Number",
-                      type: "text",
-                      required: true,
-                      admin: {
-                        width: "50%",
-                      },
-                    },
-                    {
                       name: "description",
                       label: "Description",
                       type: "text",
                       required: true,
                       admin: {
-                        width: "50%",
+                        width: "100%",
                       },
                     },
                   ],
@@ -268,7 +272,7 @@ const Procurements: CollectionConfig = {
                           required: true,
                           min: 1,
                           admin: {
-                            width: "15%",
+                            // width: "15%",
                           },
                           access: {
                             create: (e) => !isProcFinalizedAndPublished(e),
@@ -276,11 +280,11 @@ const Procurements: CollectionConfig = {
                           },
                         },
                         {
-                          name: "description",
-                          label: "Description",
+                          name: "equipmentNumber",
+                          label: "Equipment Number",
                           type: "text",
                           admin: {
-                            width: "70%",
+                            // width: "15%",
                           },
                           access: {
                             create: (e) => !isProcFinalizedAndPublished(e),
@@ -292,7 +296,19 @@ const Procurements: CollectionConfig = {
                           label: "Code",
                           type: "text",
                           admin: {
-                            width: "15%",
+                            // width: "15%",
+                          },
+                          access: {
+                            create: (e) => !isProcFinalizedAndPublished(e),
+                            update: (e) => !isProcFinalizedAndPublished(e),
+                          },
+                        },
+                        {
+                          name: "description",
+                          label: "Description",
+                          type: "text",
+                          admin: {
+                            // width: "70%",
                           },
                           access: {
                             create: (e) => !isProcFinalizedAndPublished(e),
